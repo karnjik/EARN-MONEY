@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mt-5">Admin Panel</h2>
+        
+        <div class="card mt-3 p-3">
+            <h3>Send Game Details</h3>
+            
+            <div class="form-group">
+                <label for="game-name">Game Name</label>
+                <select class="form-control" id="game-name">
+                    <option value="" disabled selected>Select Game Name</option>
+                    <option value="Free Fire">Free Fire</option>
+                    <option value="BGMI">BGMI</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="game-mode">Game Mode</label>
+                <select class="form-control" id="game-mode">
+                    <option value="" disabled selected>Select Game Mode</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="team-mode">Team Mode</label>
+                <select class="form-control" id="team-mode">
+                    <option value="Solo">Solo</option>
+                    <option value="Duo">Duo</option>
+                    <option value="Squad">Squad</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="map-container">
+                <label for="map-name">Map</label>
+                <select class="form-control" id="map-name">
+                    <option value="" disabled selected>Select Map</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="match-time">Match Time</label>
+                <input type="datetime-local" class="form-control" id="match-time">
+            </div>
+            
+            <div class="form-group">
+                <label for="entry-fees">Entry Fees</label>
+                <select class="form-control" id="entry-fees">
+                    <option value="FREE">FREE</option>
+                    <option value="10">₹10</option>
+                    <option value="15">₹15</option>
+                    <option value="20">₹20</option>
+                    <option value="25">₹25</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="prize-pool">Enter Prize Pool</label>
+                <input type="number" class="form-control" id="prize-pool" placeholder="Enter prize pool" required>
+            </div>
+
+            <button id="send-game-details-btn" class="btn btn-primary mt-3">Send Game Details</button>
+            <p id="message" class="mt-3 text-success"></p>
+        </div>
+
+    <div class="card mt-3 p-3">
+        <h3>Send Second Match Details</h3>
+        <div class="form-group">
+            <label for="game-name-2">Game Name</label>
+            <select class="form-control" id="game-name-2">
+                <option value="" disabled selected>Select Game Name</option>
+                <option value="Free Fire">Free Fire</option>
+                <option value="BGMI">BGMI</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="game-mode-2">Game Mode</label>
+            <select class="form-control" id="game-mode-2">
+                <option value="" disabled selected>Select Game Mode</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="team-mode-2">Team Mode</label>
+            <select class="form-control" id="team-mode-2">
+                <option value="Solo">Solo</option>
+                <option value="Duo">Duo</option>
+                <option value="Squad">Squad</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="map-container-2">
+            <label for="map-name-2">Map</label>
+            <select class="form-control" id="map-name-2">
+                <option value="" disabled selected>Select Map</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="match-time-2">Match Time</label>
+            <input type="datetime-local" class="form-control" id="match-time-2">
+        </div>
+        
+        <div class="form-group">
+            <label for="entry-fees-2">Entry Fees</label>
+            <select class="form-control" id="entry-fees-2">
+                <option value="FREE">FREE</option>
+                <option value="10">₹10</option>
+                <option value="15">₹15</option>
+                <option value="20">₹20</option>
+                <option value="25">₹25</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="prize-pool-2">Enter Prize Pool</label>
+            <input type="number" class="form-control" id="prize-pool-2" placeholder="Enter prize pool" required>
+        </div>
+
+        <button id="send-game-details-btn-2" class="btn btn-primary mt-3">Send Second Match Details</button>
+        <p id="message-2" class="mt-3 text-success"></p>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
+      import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCy0ETSqY4VOrowGKiGJg6o6oNjNGTl1M4",
+        authDomain: "tourney-228a2.firebaseapp.com",
+        projectId: "tourney-228a2",
+        storageBucket: "tourney-228a2.appspot.com",
+        messagingSenderId: "431696358196",
+        appId: "1:431696358196:web:e57041f4a807b8f7ed5361",
+        measurementId: "G-M3KH56B6YV",
+        databaseURL: "https://tourney-228a2-default-rtdb.firebaseio.com/"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const database = getDatabase(app);
+
+      const gameNameSelect = document.getElementById('game-name');
+      const gameModeSelect = document.getElementById('game-mode');
+      const entryFeesSelect = document.getElementById('entry-fees');
+      const mapContainer = document.getElementById('map-container');
+      const mapNameSelect = document.getElementById('map-name');
+
+
+      const gameNameSelect2 = document.getElementById('game-name-2');
+      const gameModeSelect2 = document.getElementById('game-mode-2');
+      const entryFeesSelect2 = document.getElementById('entry-fees-2');
+      const mapContainer2 = document.getElementById('map-container-2');
+      const mapNameSelect2 = document.getElementById('map-name-2');
+
+      const gameModes = {
+          "Free Fire": ["Battle Royale", "Clash Squad"],
+          "BGMI": ["Battle Royale", "TDM"]
+      };
+
+      const maps = {
+          "Free Fire": ["Bermuda", "Purgatory", "Kalahari", "Bermuda Remastered", "Alpine", "Nexterra"],
+          "BGMI": ["Erangel", "Livik"]
+      };
+
+      gameNameSelect.addEventListener('change', () => {
+          const selectedGame = gameNameSelect.value;
+          gameModeSelect.innerHTML = '<option value="" disabled selected>Select Game Mode</option>'; // Reset game modes
+          mapNameSelect.innerHTML = '<option value="" disabled selected>Select Map</option>'; // Reset maps
+
+          if (gameModes[selectedGame]) {
+              gameModes[selectedGame].forEach(mode => {
+                  const option = document.createElement('option');
+                  option.value = mode;
+                  option.textContent = mode;
+                  gameModeSelect.appendChild(option);
+              });
+          }
+
+          if (maps[selectedGame]) {
+              maps[selectedGame].forEach(map => {
+                  const option = document.createElement('option');
+                  option.value = map;
+                  option.textContent = map;
+                  mapNameSelect.appendChild(option);
+              });
+          }
+      });
+
+      document.getElementById('send-game-details-btn').addEventListener('click', () => {
+          const gameName = gameNameSelect.value;
+          const gameMode = gameModeSelect.value;
+          const teamMode = document.getElementById('team-mode').value;
+          const matchTime = document.getElementById('match-time').value;
+          const entryFees = entryFeesSelect.value;
+          const prizePool = document.getElementById('prize-pool').value;
+          const mapName = mapNameSelect.value;
+
+          if (gameName && gameMode && teamMode && matchTime && entryFees && prizePool && mapName) {
+              set(ref(database, 'gameDetails'), {
+                  gameName: gameName,
+                  gameMode: gameMode,
+                  teamMode: teamMode,
+                  matchTime: matchTime,
+                  entryFees: entryFees,
+                  prizePool: prizePool,
+                  mapName: mapName
+              }).then(() => {
+                  document.getElementById('message').textContent = "Game details sent successfully!";
+                  gameModeSelect.value = "";
+                  mapNameSelect.value = "";
+                  document.getElementById('match-time').value = "";
+                  document.getElementById('prize-pool').value = "";
+                  entryFeesSelect.value = "FREE";
+              }).catch((error) => {
+                  document.getElementById('message').textContent = "Error: " + error.message;
+              });
+          } else {
+              document.getElementById('message').textContent = "Please fill out all fields.";
+          }
+      });
+
+      gameNameSelect2.addEventListener('change', () => {
+          const selectedGame = gameNameSelect2.value;
+          gameModeSelect2.innerHTML = '<option value="" disabled selected>Select Game Mode</option>';
+          mapNameSelect2.innerHTML = '<option value="" disabled selected>Select Map</option>';
+
+          if (gameModes[selectedGame]) {
+              gameModes[selectedGame].forEach(mode => {
+                  const option = document.createElement('option');
+                  option.value = mode;
+                  option.textContent = mode;
+                  gameModeSelect2.appendChild(option);
+              });
+          }
+
+          if (maps[selectedGame]) {
+              maps[selectedGame].forEach(map => {
+                  const option = document.createElement('option');
+                  option.value = map;
+                  option.textContent = map;
+                  mapNameSelect2.appendChild(option);
+              });
+          }
+      });
+
+      document.getElementById('send-game-details-btn-2').addEventListener('click', () => {
+          const gameName = gameNameSelect2.value;
+          const gameMode = gameModeSelect2.value;
+          const teamMode = document.getElementById('team-mode-2').value;
+          const matchTime = document.getElementById('match-time-2').value;
+          const entryFees = entryFeesSelect2.value;
+          const prizePool = document.getElementById('prize-pool-2').value;
+          const mapName = mapNameSelect2.value;
+
+          if (gameName && gameMode && teamMode && matchTime && entryFees && prizePool && mapName) {
+              set(ref(database, 'gameDetails2'), {
+                  gameName: gameName,
+                  gameMode: gameMode,
+                  teamMode: teamMode,
+                  matchTime: matchTime,
+                  entryFees: entryFees,
+                  prizePool: prizePool,
+                  mapName: mapName
+              }).then(() => {
+                  document.getElementById('message2').textContent = "Game details sent successfully!";
+                  gameModeSelect2.value = "";
+                  mapNameSelect2.value = "";
+                  document.getElementById('match-time-2').value = "";
+                  document.getElementById('prize-pool-2').value = "";
+                  entryFeesSelect.value = "FREE";
+              }).catch((error) => {
+                  document.getElementById('message2').textContent = "Error: " + error.message;
+              });
+          } else {
+              document.getElementById('message2').textContent = "Please fill out all fields.";
+          }
+      });
+      
+    </script>
+    </div>
+</body>
+</html>
